@@ -1,0 +1,19 @@
+{
+  "name": "oclc-reclamation-scripts",
+  "version": "0.5.0",
+  "description": "processes MARCXML records and OCLC numbers",
+  "main": "node --max-old-space-size=8192 index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "fernando.reyes@du.edu",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "axios": "^1.3.4",
+    "dotenv": "^16.0.3",
+    "knex": "^2.4.2",
+    "mysql2": "^3.2.0",
+    "simple-oauth2": "^5.0.0",
+    "xml-stream": "^0.4.5"
+  }
+}
