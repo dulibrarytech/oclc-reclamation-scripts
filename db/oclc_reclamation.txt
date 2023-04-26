@@ -1,0 +1,261 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4541
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: 127.0.0.1 (MySQL 5.7.26)
+# Database: oclc_reclamation
+# Generation Time: 2023-04-25 20:18:09 +0000
+# ************************************************************
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table null_catalog_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `null_catalog_records`;
+
+CREATE TABLE `null_catalog_records` (
+   `id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+   `mms_id` VARCHAR(255) NOT NULL,
+   `title` LONGTEXT NULL DEFAULT NULL,
+   `batch` VARCHAR(255) NULL DEFAULT NULL
+) ENGINE=MyISAM;
+
+
+
+# Dump of table records
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `records`;
+
+CREATE TABLE `records` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `mms_id` varchar(255) NOT NULL,
+  `oclc_numbers` longtext,
+  `isbn` varchar(255) DEFAULT NULL,
+  `title` longtext,
+  `current_worldcat_oclc_number` varchar(255) DEFAULT NULL,
+  `worldcat_id` varchar(255) DEFAULT NULL,
+  `is_set` tinyint(1) DEFAULT '0',
+  `is_worldcat_record_found` tinyint(1) NOT NULL DEFAULT '1',
+  `is_null` tinyint(1) DEFAULT '0',
+  `is_locked` tinyint(1) NOT NULL DEFAULT '0',
+  `is_complete` tinyint(1) DEFAULT '0',
+  `batch` varchar(255) DEFAULT NULL,
+  `notes` text,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table total_catalog_null_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `total_catalog_null_records`;
+
+CREATE TABLE `total_catalog_null_records` (
+   `total_catalog_null_records` BIGINT(21) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM;
+
+
+
+# Dump of table total_catalog_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `total_catalog_records`;
+
+CREATE TABLE `total_catalog_records` (
+   `total_catalog_records` BIGINT(21) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM;
+
+
+
+# Dump of table total_worldcat_set_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `total_worldcat_set_records`;
+
+CREATE TABLE `total_worldcat_set_records` (
+   `total_catalog_set_records` BIGINT(21) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM;
+
+
+
+# Dump of table total_worldcat_unset_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `total_worldcat_unset_records`;
+
+CREATE TABLE `total_worldcat_unset_records` (
+   `total_catalog_unset_records` BIGINT(21) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM;
+
+
+
+# Dump of table users
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `du_id` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '1',
+  `created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table worldcat_set_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `worldcat_set_records`;
+
+CREATE TABLE `worldcat_set_records` (
+   `id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+   `mms_id` VARCHAR(255) NOT NULL,
+   `title` LONGTEXT NULL DEFAULT NULL,
+   `oclc_numbers` LONGTEXT NULL DEFAULT NULL,
+   `current_worldcat_oclc_number` VARCHAR(255) NULL DEFAULT NULL,
+   `worldcat_id` VARCHAR(255) NULL DEFAULT NULL,
+   `isbn` VARCHAR(255) NULL DEFAULT NULL,
+   `batch` VARCHAR(255) NULL DEFAULT NULL
+) ENGINE=MyISAM;
+
+
+
+# Dump of table worldcat_unset_records
+# ------------------------------------------------------------
+
+DROP VIEW IF EXISTS `worldcat_unset_records`;
+
+CREATE TABLE `worldcat_unset_records` (
+   `id` INT(11) UNSIGNED NOT NULL DEFAULT '0',
+   `mms_id` VARCHAR(255) NOT NULL,
+   `title` LONGTEXT NULL DEFAULT NULL,
+   `oclc_numbers` LONGTEXT NULL DEFAULT NULL,
+   `current_worldcat_oclc_number` VARCHAR(255) NULL DEFAULT NULL,
+   `worldcat_id` VARCHAR(255) NULL DEFAULT NULL,
+   `isbn` VARCHAR(255) NULL DEFAULT NULL,
+   `batch` VARCHAR(255) NULL DEFAULT NULL
+) ENGINE=MyISAM;
+
+
+
+
+
+# Replace placeholder table for total_worldcat_unset_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `total_worldcat_unset_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `total_worldcat_unset_records`
+AS SELECT
+   count(`records`.`id`) AS `total_catalog_unset_records`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_worldcat_record_found` = 1) and (`records`.`is_set` = 0) and (`records`.`is_null` = 0));
+
+
+# Replace placeholder table for total_catalog_null_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `total_catalog_null_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `total_catalog_null_records`
+AS SELECT
+   count(`records`.`id`) AS `total_catalog_null_records`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_null` = 1));
+
+
+# Replace placeholder table for null_catalog_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `null_catalog_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `null_catalog_records`
+AS SELECT
+   `records`.`id` AS `id`,
+   `records`.`mms_id` AS `mms_id`,
+   `records`.`title` AS `title`,
+   `records`.`batch` AS `batch`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_null` = 1));
+
+
+# Replace placeholder table for total_worldcat_set_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `total_worldcat_set_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `total_worldcat_set_records`
+AS SELECT
+   count(`records`.`id`) AS `total_catalog_set_records`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_worldcat_record_found` = 1) and (`records`.`is_set` = 1) and (`records`.`is_null` = 0));
+
+
+# Replace placeholder table for worldcat_set_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `worldcat_set_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `worldcat_set_records`
+AS SELECT
+   `records`.`id` AS `id`,
+   `records`.`mms_id` AS `mms_id`,
+   `records`.`title` AS `title`,
+   `records`.`oclc_numbers` AS `oclc_numbers`,
+   `records`.`current_worldcat_oclc_number` AS `current_worldcat_oclc_number`,
+   `records`.`worldcat_id` AS `worldcat_id`,
+   `records`.`isbn` AS `isbn`,
+   `records`.`batch` AS `batch`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_worldcat_record_found` = 1) and (`records`.`is_set` = 1) and (`records`.`is_null` = 0));
+
+
+# Replace placeholder table for total_catalog_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `total_catalog_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `total_catalog_records`
+AS SELECT
+   count(`records`.`id`) AS `total_catalog_records`
+FROM `records`;
+
+
+# Replace placeholder table for worldcat_unset_records with correct view syntax
+# ------------------------------------------------------------
+
+DROP TABLE `worldcat_unset_records`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `worldcat_unset_records`
+AS SELECT
+   `records`.`id` AS `id`,
+   `records`.`mms_id` AS `mms_id`,
+   `records`.`title` AS `title`,
+   `records`.`oclc_numbers` AS `oclc_numbers`,
+   `records`.`current_worldcat_oclc_number` AS `current_worldcat_oclc_number`,
+   `records`.`worldcat_id` AS `worldcat_id`,
+   `records`.`isbn` AS `isbn`,
+   `records`.`batch` AS `batch`
+FROM `records` where ((`records`.`is_complete` = 1) and (`records`.`is_worldcat_record_found` = 1) and (`records`.`is_set` = 0) and (`records`.`is_null` = 0));
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
